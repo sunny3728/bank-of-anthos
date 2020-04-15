@@ -1,0 +1,64 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    font-family: 'Open Sans', sans-serif !important;
+    margin: 0;
+    padding: 0;
+    background-color: #fafbfe !important;
+}
+p {
+    margin-bottom: 0rem !important;
+}
+label {
+    font-size: 0.8rem;
+}
+.header-title {
+    font-weight: 700;
+}
+.header-body {
+    padding-top: 1.5rem;
+    border-bottom: 1px solid #e3ebf6;
+}
+.header {
+    margin-bottom: 2rem;
+}
+.secondary-text {
+    letter-spacing: .08em;
+}
+.hidden {
+    display: none;
+}
+.alert-icon {
+    font-size: 18px;
+    vertical-align: middle;
+}
+.card {
+    margin-bottom: 1.5rem;
+    border-color: #edf2f9 !important;
+    box-shadow: 0 0 10px 2px rgba(154,161,171,.15) !important;
+    border-radius: .25rem !important;
+}
+.custom-select:focus {
+    border-color: #009688;
+    outline: 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.075), 0 0 5px rgba(0, 110, 99, 0);
+}
+.sign-in button {
+    font-size: 1rem;
+}
+.sign-in i {
+    font-size: 1.125rem;
+}
+.sign-in input {
+    font-size: 1.15rem;
+}
+.btn-sign-in {
+    color: #fafbfe;
+    background-color: #4caf50;
+}
+.btn-sign-in:focus:active, .btn-sign-in:focus, .btn-sign-in:hover {
+    background-color: #218838;
+    color: #fafbfe;
+}
+.btn-sign-in:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76,175,80,.5);
+}

@@ -1,0 +1,12 @@
+.btn-create-account {
+    color: #fafbfe !important;
+    background-color: #3688fc;
+    font-size: 1rem;
+}
+.btn-create-account:focus:active, .btn-create-account:focus, .btn-create-account:hover {
+    background-color: #1072fb;
+    color: #fafbfe;
+}
+.btn-create-account:focus {
+    box-shadow: 0 0 0 0.2rem rgba(84,154,252,.5);
+}

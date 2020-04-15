@@ -1,0 +1,82 @@
+<!-- Header -->
+<div class="row d-flex align-items-end header header-body">
+    <!-- Alert on load -->
+    <ng-template [ngIf]="message">
+        <div class="col-md-8 offset-md-2">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <span class="alert-icon mr-2 material-icons">check_circle</span>{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            </div>
+        </div>
+    </ng-template>
+    <div class="col-md-8">        
+        <small class="text-uppercase text-muted secondary-text">Overview</small>
+        <h2 class="header-title">Checking Account</h2>
+    </div>
+    <div class="col-md-4">
+        <div class="account-info float-right">
+        <p><span class="account-fa material-icons">info</span><span class="account-num-text">Account Number:</span><span class="account-number">{{ account_id }}</span></p>
+        </div>
+    </div>
+</div>
+
+<!-- Cards -->
+<div class="row col-lg-12 align-items-center">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col">
+                <p class="text-uppercase secondary-text text-muted mb-3">
+                    <b>Current Balance</b>
+                </p>
+                <span class="h1 mb-0">
+                    {{ balance }}
+                </span>
+                </div>
+                <div class="col-auto">
+                <span class="material-icons card-icon">account_balance_wallet</span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="row">
+        <div class="col-lg-6">
+            <div class="card card-button" data-toggle="modal" data-target="#depositFunds" data-keyboard="false" data-backdrop="static">
+            <div class="card-body">
+                <div class="row align-items-center">
+                <div class="col">
+                    <span class="h5 mb-0">
+                    Deposit Funds
+                    </span>
+                </div>
+                <div class="button-icon col-auto">
+                    <span class="material-icons">get_app</span>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card card-button" data-toggle="modal" data-target="#sendPayment" data-keyboard="false" data-backdrop="static">
+            <div class="card-body">
+                <div class="row align-items-center">
+                <div class="col">
+                    <span class="h5 mb-0">
+                    Send Payment
+                    </span>
+                </div>
+                <div class="button-icon col-auto">
+                    <span class="material-icons">forward</span>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

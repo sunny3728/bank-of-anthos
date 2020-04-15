@@ -1,0 +1,33 @@
+.navbar-top {
+    background-color: #313a46;
+    min-height: 80px;
+    color: #98a6ad;
+    position: relative;
+}
+.nav-item {
+    font-size: 24px !important;
+    margin: auto;
+    margin-left: 20px;
+}
+.nav-link {
+    color: #98a6ad;
+    text-transform: none !important;
+    font-size: 1rem !important;
+}
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+}
+.nav-link i {
+    font-size: 20px;
+}
+.nav-link:hover {
+    color: white;
+    transition: all 0.2s ease-in;
+}
+#logout-form a:hover {
+    cursor: pointer;
+}
+.menu-icon {
+    color: #98a6ad;
+}
