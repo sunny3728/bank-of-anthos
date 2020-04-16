@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root'
 })
+// Handle JWT authentication
 export class AuthService {
   
   private readonly TOKEN_NAME = 'token';
@@ -18,12 +19,13 @@ export class AuthService {
   private accountID: number;
 
   constructor(private http: HttpService, private router: Router, private cookies: CookieService) { 
-    const jwtres = localStorage.getItem(this.TOKEN_NAME);
-    if (jwtres) {
-      console.log('JWT retrieved...logged in.');
-      const jwtJson = JSON.parse(jwtres);
-      console.log(jwtJson);
-      this.token = jwtres;
+    var jwtCookie = this.cookies.get(this.TOKEN_NAME);
+    if (jwtCookie) {
+      // Found JWT token; pull user attributes
+      this.token = jwtCookie;
+      const jwt = new JwtHelperService();
+      var decoded = jwt.decodeToken(this.token);
+      this.setUserAttributes(decoded);
       this.http.setHTTPAuth(true, this.token);
       this.authenticated = true;
     }

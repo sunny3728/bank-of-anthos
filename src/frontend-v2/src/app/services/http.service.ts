@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+// Uses HttpClient to make requests and auto-attaches JWT token if authenticated
 export class HttpService {
 
   private authenticated: boolean = false;
@@ -17,7 +19,7 @@ export class HttpService {
     this.token = token;
   }
 
-  get(endpoint: string, params?: Object) {
+  get(endpoint: string, params?: Object): Observable<any> {
     // Add token to request header if it exists
     const header = (this.authenticated) ? { Authorization: `Bearer ${this.token}` } : undefined;
 
@@ -35,7 +37,7 @@ export class HttpService {
     });
   }
 
-  post(endpoint: string, body?: any) {
+  post(endpoint: string, body?: any): Observable<any> {
     // Add token to request header if it exists
     const header = (this.authenticated) ? { Authorization: `Bearer ${this.token}` } : undefined;
 
