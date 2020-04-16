@@ -1,16 +1,5 @@
 <!-- Header -->
 <div class="row d-flex align-items-end header header-body">
-    <!-- Alert on load -->
-    <ng-template [ngIf]="message">
-        <div class="col-md-8 offset-md-2">
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <span class="alert-icon mr-2 material-icons">check_circle</span>{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">×</span>
-            </button>
-            </div>
-        </div>
-    </ng-template>
     <div class="col-md-8">        
         <small class="text-uppercase text-muted secondary-text">Overview</small>
         <h2 class="header-title">Checking Account</h2>
@@ -22,61 +11,133 @@
     </div>
 </div>
 
-<!-- Cards -->
+ <!-- Cards -->
 <div class="row col-lg-12 align-items-center">
     <div class="col-lg-4">
         <div class="card">
-            <div class="card-body">
+          <div class="card-body">
             <div class="row align-items-center">
-                <div class="col">
+              <div class="col">
                 <p class="text-uppercase secondary-text text-muted mb-3">
-                    <b>Current Balance</b>
+                  <b>Current Balance</b>
                 </p>
                 <span class="h1 mb-0">
-                    {{ balance }}
+                  {{ formatCurrency(balance) }}
                 </span>
-                </div>
-                <div class="col-auto">
+              </div>
+              <div class="col-auto">
                 <span class="material-icons card-icon">account_balance_wallet</span>
-                </div>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
+      </div>
     </div>
     <div class="col-lg-8">
-        <div class="row">
+      <div class="row">
         <div class="col-lg-6">
-            <div class="card card-button" data-toggle="modal" data-target="#depositFunds" data-keyboard="false" data-backdrop="static">
+          <div class="card card-button" data-toggle="modal" data-target="#depositFunds" data-keyboard="false" data-backdrop="static">
             <div class="card-body">
-                <div class="row align-items-center">
+              <div class="row align-items-center">
                 <div class="col">
-                    <span class="h5 mb-0">
+                  <span class="h5 mb-0">
                     Deposit Funds
-                    </span>
+                  </span>
                 </div>
                 <div class="button-icon col-auto">
-                    <span class="material-icons">get_app</span>
+                  <span class="material-icons">get_app</span>
                 </div>
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
         <div class="col-lg-6">
-            <div class="card card-button" data-toggle="modal" data-target="#sendPayment" data-keyboard="false" data-backdrop="static">
+          <div class="card card-button" data-toggle="modal" data-target="#sendPayment" data-keyboard="false" data-backdrop="static">
             <div class="card-body">
-                <div class="row align-items-center">
+              <div class="row align-items-center">
                 <div class="col">
-                    <span class="h5 mb-0">
+                  <span class="h5 mb-0">
                     Send Payment
-                    </span>
+                  </span>
                 </div>
                 <div class="button-icon col-auto">
-                    <span class="material-icons">forward</span>
+                  <span class="material-icons">forward</span>
                 </div>
-                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <!-- Transaction History Table -->
+<div class="row col-lg-10 offset-lg-1 mb-4">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-table-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-header-title">
+                Transaction History
+              </h4>
             </div>
+          </div>
         </div>
+        <div class="table-responsive mb-0">
+          <div *ngIf="transactions.length == 0;else transactions_list">
+            <h4 class="card-table-header">No Transactions Found</h4>
+          </div>
+        
+          <ng-template #transactions_list>
+            <table class="table table-sm table-nowrap card-table">
+                <thead class="text-uppercase">
+                  <tr>
+                    <th>
+                      <a class="text-transaction-header">Date</a> 
+                    </th>
+                    <th>
+                      <a class="text-transaction-header">Type</a>
+                    </th>
+                    <th>
+                      <a class="text-transaction-header">Account</a>
+                    </th>
+                    <th class="text-right">
+                      <a class="text-transaction-header">Amount</a>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="list">
+                  <tr *ngFor="let transaction of transactions">
+                    <td class="text-uppercase transaction-date">
+                      <p><small class="text-uppercase date-month">{{ formatTimestampMonth(transaction.timestamp) }}</small>{{ formatTimestampDay(transaction.timestamp) }}</p>
+                    </td>
+                    <div *ngIf="transaction.toAccountNum == account_id;else forAccountNum">
+                      <td class="transaction-type">
+                        <span class="text-success">●</span> Debit
+                      </td>
+                      <td class="transaction-account">
+                        {{ transaction.fromAccountNum }}
+                      </td>
+                      <td class="transaction-amount transaction-amount-debit">
+                        +{{ formatCurrency(transaction.amount) }}
+                      </td>
+                    </div>
+                    <ng-template #forAccountNum>
+                      <td class="transaction-type">
+                        <span class="text-warning">●</span> Credit
+                      </td>
+                      <td class="transaction-account">
+                        {{ transaction.toAccountNum }}
+                      </td>
+                      <td class="transaction-amount">
+                        -{{ formatCurrency(transaction.amount) }}
+                      </td>
+                    </ng-template>
+                  </tr>
+                </tbody>
+            </table>
+          </ng-template>
         </div>
+      </div>
     </div>
 </div>
