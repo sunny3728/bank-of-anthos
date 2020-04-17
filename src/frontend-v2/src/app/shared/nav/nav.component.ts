@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -7,9 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
-  constructor() { }
+  name: string = null;
+  authenticated: boolean = false;
+
+  constructor(private auth: AuthService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(res => {
+      this.updateNav();
+    });
   }
 
+  updateNav() {
+    this.authenticated = this.auth.isAuthenticated();
+    this.name = this.authenticated ? this.auth.getName() : null;
+  }
+
+  logout() {
+    this.auth.logout();
+  }
 }
