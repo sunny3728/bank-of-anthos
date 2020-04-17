@@ -3,6 +3,7 @@ import { HttpService } from './http.service';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,7 @@ export class AuthService {
   private readonly TOKEN_NAME = 'token';
   private authenticated: boolean = false;
   private token: string;
-
-  private user: string;
-  private username: string;
-  private accountID: number;
+  private user: User;
 
   constructor(private http: HttpService, private router: Router, private cookies: CookieService) { 
     var jwtCookie = this.cookies.get(this.TOKEN_NAME);
@@ -25,7 +23,7 @@ export class AuthService {
       this.token = jwtCookie;
       const jwt = new JwtHelperService();
       var decoded = jwt.decodeToken(this.token);
-      this.setUserAttributes(decoded);
+      this.user = new User(decoded.name, decoded.user, decoded.acct);
       this.http.setHTTPAuth(true, this.token);
       this.authenticated = true;
     }
@@ -35,11 +33,11 @@ export class AuthService {
     return this.authenticated;
   }
 
-  getName(): string { return this.user; }
+  getName(): string { return this.user.name; }
 
-  getUsername(): string { return this.username; }
+  getUsername(): string { return this.user.username; }
 
-  getAccount(): number { return this.accountID; }
+  getAccount(): number { return this.user.accountID; }
 
   // Handle user login to userservice
   login(username: string, password: string) {
@@ -54,10 +52,10 @@ export class AuthService {
 
   // Handle user logout
   logout() {
-    this.http.setHTTPAuth(false);
     delete this.token;
-
-    localStorage.clear();
+    delete this.user;
+    this.cookies.delete(this.TOKEN_NAME);
+    this.http.setHTTPAuth(false);
     this.authenticated = false;
     this.router.navigateByUrl('/login');
   }
@@ -72,15 +70,9 @@ export class AuthService {
     this.cookies.set(this.TOKEN_NAME, this.token, max);
 
     // Set user props and attach token to HttpService
-    this.setUserAttributes(decoded);
+    this.user = new User(decoded.name, decoded.user, decoded.acct);
     this.http.setHTTPAuth(true, this.token);
     this.authenticated = true;
     this.router.navigateByUrl('');
-  }
-
-  private setUserAttributes(decodedToken: any){
-    this.username = decodedToken.user;
-    this.accountID = Number(decodedToken.acct);
-    this.user = decodedToken.name;
   }
 }
