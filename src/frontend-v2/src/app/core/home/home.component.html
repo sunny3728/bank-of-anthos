@@ -111,7 +111,7 @@
                     <td class="text-uppercase transaction-date">
                       <p><small class="text-uppercase date-month">{{ formatTimestampMonth(transaction.timestamp) }}</small>{{ formatTimestampDay(transaction.timestamp) }}</p>
                     </td>
-                    <div *ngIf="transaction.toAccountNum == account_id;else forAccountNum">
+                    <ng-container *ngIf="transaction.toAccountNum == account_id;else forAccountNum">
                       <td class="transaction-type">
                         <span class="text-success">●</span> Debit
                       </td>
@@ -121,7 +121,7 @@
                       <td class="transaction-amount transaction-amount-debit">
                         +{{ formatCurrency(transaction.amount) }}
                       </td>
-                    </div>
+                    </ng-container>
                     <ng-template #forAccountNum>
                       <td class="transaction-type">
                         <span class="text-warning">●</span> Credit

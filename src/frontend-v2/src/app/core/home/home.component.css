@@ -1,83 +1,106 @@
 .card-icon {
     font-size: 36px !important;
 }
-  .account-fa {
-    vertical-align: bottom;
-    font-size: 20px;
-    margin-right: 5px;
-    color: #313a46;
-  }
-  .account-num-text {
-    font-weight: 600;
-    font-size: 14px;
-    margin-right: 8px;
-  }
-  .account-number {
-    font-weight: 200;
-    font-size: 14px;
-  }
-  .table-sm td, .table-sm th {
-    padding: 1.2rem !important;
-  }
-  .table td {
-    vertical-align: middle !important;
-    border-top: 1px solid #edf2f9 !important;
-  }
-  .card-table {
-    margin-bottom: 0 !important;
-  }
-  .card-table tbody td:first-child, .card-table thead th:first-child {
-    padding-left: 1.5rem!important;
-  }
-  .card-table-header {
-    padding: 1.5rem 1.5rem;
-    margin-bottom: 0;
-    background-color: transparent;
-    border-bottom: 1px solid #edf2f9;
-  }
-  .header-title {
-    font-weight: 700;
-  }
-  .modal-header {
-    padding-bottom: 1rem !important;
-    border-bottom: 1px solid #edf2f9 !important;
-  }
-  .modal-content .modal-body {
-    padding: 20px 24px 0px;
-  }
-  .card-header-title {
-    margin-bottom: 0;
-    font-weight: 700;
-  }
-  .table thead th {
-    background-color: #f9fbfd;
-    text-transform: uppercase;
-    font-size: .8125rem;
-    font-weight: 600;
-    letter-spacing: .08em;
-    color: #95aac9;
-    border-bottom-width: 1px;
-  }
-  .table [data-sort]::after {
-    margin-left: .25rem;
-  }
-  .list tr:hover {
-    background-color: #f9fbfd;
-    transition: all 0.3s ease-in;
-  }
-  .transaction-amount {
-    text-align: right !important;
-    font-size: 22px;
-  }
-  .transaction-amount-debit {
-    color: green;
-  }
-  .transaction-date {
-    font-size: 18px;
-  }
-  .text-transaction-header {
-    color: #95aac9 !important;
-  }
-  .date-month {
-    margin-right: 5px;
-  }
+.account-fa {
+  vertical-align: bottom;
+  font-size: 20px;
+  margin-right: 5px;
+  color: #313a46;
+}
+.account-num-text {
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 8px;
+}
+.account-number {
+  font-weight: 200;
+  font-size: 14px;
+}
+.table-sm td, .table-sm th {
+  padding: 1.2rem !important;
+}
+.table td {
+  vertical-align: middle !important;
+  border-top: 1px solid #edf2f9 !important;
+}
+.card-table {
+  margin-bottom: 0 !important;
+}
+.card-table tbody td:first-child, .card-table thead th:first-child {
+  padding-left: 1.5rem!important;
+}
+.card-table-header {
+  padding: 1.5rem 1.5rem;
+  margin-bottom: 0;
+  background-color: transparent;
+  border-bottom: 1px solid #edf2f9;
+}
+.header-title {
+  font-weight: 700;
+}
+.modal-header {
+  padding-bottom: 1rem !important;
+  border-bottom: 1px solid #edf2f9 !important;
+}
+.modal-content .modal-body {
+  padding: 20px 24px 0px;
+}
+.card-header-title {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+.table thead th {
+  background-color: #f9fbfd;
+  text-transform: uppercase;
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: #95aac9;
+  border-bottom-width: 1px;
+}
+.table [data-sort]::after {
+  margin-left: .25rem;
+}
+.list tr:hover {
+  background-color: #f9fbfd;
+  transition: all 0.3s ease-in;
+}
+.transaction-amount {
+  text-align: right !important;
+  font-size: 22px;
+}
+.transaction-amount-debit {
+  color: green;
+}
+.transaction-date {
+  font-size: 18px;
+}
+.text-transaction-header {
+  color: #95aac9 !important;
+}
+.date-month {
+  margin-right: 5px;
+}
+
+/* Modals in home component */
+.card-button:hover {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  transform: translateY(-5px) scale(1.005) translateZ(0);
+  background-color: #313a46;
+  color: white;
+}
+.fa-icon-spacer {
+  margin-left: 8px;
+}
+.modal-icon {
+  font-size: 18px !important;
+  margin-right: 8px;
+  width: 18px;
+}
+.amount-font {
+  font-size: 28px !important;
+}
+.amount-font::-webkit-input-placeholder {
+  font-size: 28px !important;
+}

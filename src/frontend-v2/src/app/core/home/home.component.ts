@@ -40,6 +40,6 @@ export class HomeComponent implements OnInit {
   }
 
   formatCurrency(amount: number) {
-    return amount == 0 || amount === undefined ? "$---" : `$${amount.toFixed(2)}`;
+    return amount == 0 || amount === undefined ? "$---" : amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
   }
 }
