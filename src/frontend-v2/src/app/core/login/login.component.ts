@@ -13,10 +13,18 @@ export class LoginComponent implements OnInit {
 
   default_user: string = environment.bank_username;
   default_password: string = environment.bank_password;
+  validated: boolean = false;
 
   constructor(private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
+  }
+
+  validate(form) {
+    if (form.valid) {
+      this.login(form);
+    }
+    this.validated = true;
   }
 
   async login(form) {
