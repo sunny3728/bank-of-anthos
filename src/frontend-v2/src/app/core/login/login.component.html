@@ -29,7 +29,7 @@
                         <div class="input-group-prepend mr-2">
                             <span class="input-group-text"><span class="material-icons">account_circle</span></span>
                         </div>
-                        <input class="form-control" type="text" id="username" name="username" autocomplete="off" value="{{ default_user }}" required ngModel>
+                        <input class="form-control" type="text" id="username" name="username" autocomplete="off" value="{{ default_user }}" pattern="([A-z0-9]){2,}" required ngModel>
                         <div class="invalid-feedback">
                             Please enter your username.
                         </div>
