@@ -23,4 +23,8 @@ export class AccountService {
         data.fromRoutingNum, data.toAccountNum, data.toRoutingNum, data.amount)))
     );
   }
+
+  getContacts() {
+    
+  }
 }

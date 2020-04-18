@@ -12,6 +12,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { NavComponent } from './shared/nav/nav.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { AlertbannerComponent } from './shared/alertbanner/alertbanner.component';
+import { DepositComponent } from './core/home/deposit/deposit.component';
+import { SendComponent } from './core/home/send/send.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { AlertbannerComponent } from './shared/alertbanner/alertbanner.component
     SignupComponent,
     NavComponent,
     FooterComponent,
-    AlertbannerComponent
+    AlertbannerComponent,
+    DepositComponent,
+    SendComponent
   ],
   imports: [
     BrowserModule,
