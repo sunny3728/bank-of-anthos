@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from 'src/app/services/http.service';
-import { repeat } from 'rxjs/operators';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +11,7 @@ export class SignupComponent implements OnInit {
   validated: boolean = false;
   maxDate: string = '';
 
-  constructor(private userservice: HttpService) { 
+  constructor(private account: AccountService) { 
   }
 
   ngOnInit(): void {
@@ -34,12 +33,7 @@ export class SignupComponent implements OnInit {
     this.validated = true;
   }
 
-  async signup(form) {
-    try {
-      await this.userservice.get(form.value.username, form.value.password); 
-    } catch (err) {
-      console.log('caught error');
-    }
+  signup(form) {
   }
 
 }
