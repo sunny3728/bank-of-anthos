@@ -8,7 +8,5 @@ resources:
 - app/loadgenerator.yaml
 - app/transaction-history.yaml
 - app/userservice.yaml
-- db/in-cluster/accounts-db.yaml
-- db/in-cluster/ledger-db.yaml
 - config/default.yaml
 - extras/jwt/jwt-secret.yaml
