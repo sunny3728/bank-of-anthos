@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  bank_username: 'testuser',
-  bank_password: 'password'
+  default_username: 'testuser',
+  default_password: 'password'
 };
 
 /*

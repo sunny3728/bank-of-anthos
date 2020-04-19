@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlertbannerComponent } from './alertbanner.component';
+import { AlertBannerComponent } from './alert-banner.component';
 
-describe('AlertbannerComponent', () => {
-  let component: AlertbannerComponent;
-  let fixture: ComponentFixture<AlertbannerComponent>;
+describe('AlertBannerComponent', () => {
+  let component: AlertBannerComponent;
+  let fixture: ComponentFixture<AlertBannerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AlertbannerComponent ]
+      declarations: [ AlertBannerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AlertbannerComponent);
+    fixture = TestBed.createComponent(AlertBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

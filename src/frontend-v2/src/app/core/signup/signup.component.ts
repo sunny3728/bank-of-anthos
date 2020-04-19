@@ -11,6 +11,19 @@ export class SignupComponent implements OnInit {
   validated: boolean = false;
   maxDate: string = '';
 
+  username: string;
+  password: string;
+  passwordRepeat: string;
+
+  firstname: string;
+  lastname: string;
+  address: string = '1021 Valley St';
+  country: string;
+  state: string;
+  zip: string = '98109';
+  ssn: string = '111-22-3333';
+  birthday: string;
+
   constructor(private account: AccountService) { 
   }
 

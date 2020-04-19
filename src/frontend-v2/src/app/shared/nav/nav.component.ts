@@ -15,9 +15,11 @@ export class NavComponent implements OnInit {
   constructor(private auth: AuthService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(res => {
-      this.updateNav();
-    });
+    this.auth.listen().subscribe(
+      (updatedRoute) => { 
+        this.updateNav();
+      }
+    );
   }
 
   updateNav() {

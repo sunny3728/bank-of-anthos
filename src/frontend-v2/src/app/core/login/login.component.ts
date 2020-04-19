@@ -10,13 +10,15 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  default_user: string = environment.bank_username;
-  default_password: string = environment.bank_password;
+  username: string;
+  password: string;
   validated: boolean = false;
 
   constructor(private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
+    this.username = environment.default_username;
+    this.password = environment.default_password;
   }
 
   validate(form) {
@@ -27,11 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   async login(form) {
-    try {
-      await this.auth.login(form.value.username, form.value.password); 
-    } catch (err) {
-      console.log('caught error');
-    }
+    await this.auth.login(form.value.username, form.value.password);
   }
 
   signup() {

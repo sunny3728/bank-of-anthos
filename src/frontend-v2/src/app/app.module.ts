@@ -11,9 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { NavComponent } from './shared/nav/nav.component';
 import { FooterComponent } from './shared/footer/footer.component';
-import { AlertbannerComponent } from './shared/alertbanner/alertbanner.component';
 import { DepositComponent } from './core/home/deposit/deposit.component';
 import { SendComponent } from './core/home/send/send.component';
+import { AlertBannerComponent } from './shared/alert-banner/alert-banner.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +23,9 @@ import { SendComponent } from './core/home/send/send.component';
     SignupComponent,
     NavComponent,
     FooterComponent,
-    AlertbannerComponent,
     DepositComponent,
-    SendComponent
+    SendComponent,
+    AlertBannerComponent
   ],
   imports: [
     BrowserModule,
