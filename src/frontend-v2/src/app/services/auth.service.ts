@@ -60,7 +60,7 @@ export class AuthService {
     }).subscribe(
       (res: any) => { this.loginUser(res); },
       (error: HttpErrorResponse) => {
-        var msg = (error.status == 404) ? 'Login Failed: Your username or password is incorrect.' : 'Login Failed: service unavailable.';
+        var msg = (error.status == 404 || error.status == 401) ? 'Login Failed: Your username or password is incorrect.' : 'Login Failed: service unavailable.';
         this.alert.error(msg, false); 
       }
     );

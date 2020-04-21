@@ -11,7 +11,7 @@ import { AccountService } from 'src/app/services/account.service';
 export class HomeComponent implements OnInit {
 
   account_id: number;
-  balance: number;
+  balance: number = 0;
   transactions: Transaction[] = [];
 
   constructor(private account: AccountService, private auth: AuthService) { 

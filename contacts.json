@@ -1,0 +1,26 @@
+[
+    {
+        "account_num": "9999999999",
+        "is_external": true,
+        "label": "External Checking",
+        "routing_num": "987654321"
+    },
+    {
+        "account_num": "8888888888",
+        "is_external": true,
+        "label": "External Savings",
+        "routing_num": "987654321"
+    },
+    {
+        "account_num": "2222222222",
+        "is_external": false,
+        "label": "Alice",
+        "routing_num": "123456789"
+    },
+    {
+        "account_num": "3333333333",
+        "is_external": false,
+        "label": "Bob",
+        "routing_num": "123456789"
+    }
+]
