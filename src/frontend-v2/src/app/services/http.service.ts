@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 // Uses HttpClient to make requests and auto-attaches JWT token if authenticated
+// All requests are made through HttpService
 export class HttpService {
 
   private authenticated: boolean = false;
@@ -19,6 +20,7 @@ export class HttpService {
     this.token = token;
   }
 
+  // HTTP GET
   get(endpoint: string, params?: Object): Observable<any> {
     // Add token to request header if it exists
     const header = (this.authenticated) ? { Authorization: `Bearer ${this.token}` } : undefined;
@@ -31,18 +33,18 @@ export class HttpService {
     }
 
     return this.http.get(endpoint, {
-      responseType: 'json',
       headers: header,
       params: requestParams
     });
   }
 
+  // HTTP POST
   post(endpoint: string, body?: any): Observable<any> {
     // Add token to request header if it exists
     const header = (this.authenticated) ? { Authorization: `Bearer ${this.token}` } : undefined;
 
     return this.http.post(endpoint, body, {
-      responseType: 'json',
+      responseType: 'text',
       observe: 'body',
       headers: header
     })

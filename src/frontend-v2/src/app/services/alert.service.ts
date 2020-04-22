@@ -6,7 +6,7 @@ import { Router, NavigationStart } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-// Used to trigger the alertbanner component on Http error/success
+// Used to trigger the alert-banner component on Http error/success
 export class AlertService {
 
   private trigger = new Subject<Alert>();
@@ -23,11 +23,13 @@ export class AlertService {
     return this.trigger.asObservable();
   }
 
+  // AlertType.Error; display error css
   error(error: string, dismissable: boolean) {
     console.log(error);
     this.trigger.next(new Alert(AlertType.Error, error, dismissable));
   }
 
+  // AlertType.Success; display success css
   success(success: string, dismissable: boolean) {
     console.log(success);
     this.trigger.next(new Alert(AlertType.Success, success, dismissable));

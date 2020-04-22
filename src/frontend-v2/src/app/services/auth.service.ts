@@ -31,6 +31,7 @@ export class AuthService {
       this.http.setHTTPAuth(true, this.token);
       this.authenticated = true;
     }
+    // Submit trigger on route changes
     router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.trigger.next();
@@ -48,6 +49,7 @@ export class AuthService {
 
   getAccount(): number { return this.user.accountID; }
 
+  // Used by nav bar to get updates on authentication status
   listen(): Observable<any> {
     return this.trigger.asObservable();
   }
