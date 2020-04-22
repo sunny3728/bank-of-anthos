@@ -43,4 +43,4 @@ build:
     concurrency: 0
 deploy:
   kustomize:
-    paths: ["manifests/environments/default"]
+    paths: ["manifests/base"]
