@@ -42,11 +42,5 @@ build:
   local:
     concurrency: 0
 deploy:
-  kubectl:
-    manifests:
-    - ./manifests/app/**.yaml
-    - ./manifests/config/**.yaml
-    - ./manifests/db/in-cluster/**.yaml
-    # deploy a pre-build secret
-    # in practice, this should not be checked in to source control
-    - ./manifests/extras/jwt/jwt-secret.yaml
+  kustomize:
+    paths: ["manifests/environments/default"]
