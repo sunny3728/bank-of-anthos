@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { TransferService } from 'src/app/services/transfer.service';
 import { Contact } from 'src/app/models/contact.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'deposit-modal',
   templateUrl: './deposit.component.html',
   styleUrls: ['./deposit.component.css']
 })
-export class DepositComponent implements OnInit {
+export class DepositComponent implements OnInit, OnDestroy {
   
   @ViewChild('closeModal') closeModal: ElementRef;
+  listener: Subscription;
 
   // User account info
   username: string;
@@ -26,17 +28,18 @@ export class DepositComponent implements OnInit {
   constructor(private transfer: TransferService, private auth: AuthService) { 
     this.username = this.auth.getUsername();
     this.accountId = this.auth.getAccount();
-
+    // Update contacts on trigger from TransferService
+    this.listener = this.transfer.listenForContacts().subscribe(
+      (res) => { this.fetchContacts(); }
+    );
   }
 
   ngOnInit(): void {
-    // Initialize contacts
     this.fetchContacts();
+  }
 
-    // Update contacts on trigger from TransferService
-    this.transfer.listen().subscribe(
-      () => { this.fetchContacts(); }
-    );
+  ngOnDestroy() {
+    this.listener.unsubscribe();
   }
 
   fetchContacts() {

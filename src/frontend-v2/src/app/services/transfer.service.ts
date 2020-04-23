@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { map, catchError } from 'rxjs/operators';
 import { Contact } from '../models/contact.model';
-import { empty, Observable, Subject } from 'rxjs';
+import { empty, Observable, BehaviorSubject, Subject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from './alert.service';
 
@@ -11,14 +11,17 @@ import { AlertService } from './alert.service';
 })
 export class TransferService {
 
-  private triggerUpdate = new Subject();
+  private triggerUpdateContacts = new BehaviorSubject<string>('');
+  private triggerUpdateBalance = new BehaviorSubject<string>('');
   
-  constructor(private http: HttpService, private alert: AlertService) {
-    this.triggerUpdate.next();
+  constructor(private http: HttpService, private alert: AlertService) { }
+
+  listenForContacts(): Observable<any> {
+    return this.triggerUpdateContacts.asObservable();
   }
 
-  listen(): Observable<any> {
-    return this.triggerUpdate.asObservable();
+  listenForBalance(): Observable<any> {
+    return this.triggerUpdateBalance.asObservable();
   }
 
   // Retrieve all user contacts; filtered by type at the modal components
@@ -42,7 +45,7 @@ export class TransferService {
       is_external: contact.external
     };
     return this.http.post(`api/contacts/${username}`, body).subscribe(
-      (res) => { this.triggerUpdate.next(); },
+      (res) => { this.triggerUpdateContacts.next('refresh'); },
       (error: HttpErrorResponse) => { 
         var msg = 'Failed to create new contact';
         this.alert.error(msg, true);
@@ -63,7 +66,7 @@ export class TransferService {
       () => { 
         var msg = 'Deposit accepted';
         this.alert.success(msg, true);
-        this.triggerUpdate.next();
+        this.triggerUpdateBalance.next('refresh');
       },
       (error: HttpErrorResponse) => { 
         var msg = 'Deposit failed';
@@ -85,7 +88,7 @@ export class TransferService {
       () => { 
         var msg = 'Payment accepted';
         this.alert.success(msg, true);
-        this.triggerUpdate.next();
+        this.triggerUpdateBalance.next('refresh');
       },
       (error: HttpErrorResponse) => { 
         var msg = 'Payment failed';
