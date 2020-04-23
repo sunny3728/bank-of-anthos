@@ -14,6 +14,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { DepositComponent } from './core/home/deposit/deposit.component';
 import { SendComponent } from './core/home/send/send.component';
 import { AlertBannerComponent } from './shared/alert-banner/alert-banner.component';
+import { ValidatorsModule } from "ngx-validators";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AlertBannerComponent } from './shared/alert-banner/alert-banner.compone
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ValidatorsModule
   ],
   providers: [ CookieService ],
   bootstrap: [AppComponent]

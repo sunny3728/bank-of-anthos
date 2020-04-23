@@ -1,0 +1,21 @@
+.modal-header {
+    padding-bottom: 1rem !important;
+    border-bottom: 1px solid #edf2f9 !important;
+}
+.modal-content .modal-body {
+    padding: 20px 24px 0px;
+}
+.amount-font {
+    font-size: 28px !important;
+}
+.amount-font::-webkit-input-placeholder {
+    font-size: 28px !important;
+}
+.fa-icon-spacer {
+    margin-left: 8px;
+}
+.modal-icon {
+    font-size: 18px !important;
+    margin-right: 8px;
+    width: 18px;
+}

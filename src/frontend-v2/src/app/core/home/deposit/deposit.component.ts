@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { TransactionService } from 'src/app/services/transaction.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { TransferService } from 'src/app/services/transfer.service';
 import { Contact } from 'src/app/models/contact.model';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,50 +9,67 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./deposit.component.css']
 })
 export class DepositComponent implements OnInit {
+  
+  @ViewChild('closeModal') closeModal: ElementRef;
 
-  validated: boolean = false;
-  addExternal: boolean = false;
+  // User account info
   username: string;
-  contacts: Contact[] = [];
+  accountId: number;
 
-  // Deposit form
-  selectedAccount: Contact;
-  external_account_num: string;
-  external_routing_num: string;
-  external_label: string;
+  // Deposit from contact form
+  validated: boolean = false;
   amount: number;
+  savedContacts: Contact[] = [];
+  selectedContact: Contact;
+  newContact: Contact = new Contact(undefined, true, "", undefined);
 
-  constructor(private transactions: TransactionService, private auth: AuthService) { 
+  constructor(private transfer: TransferService, private auth: AuthService) { 
     this.username = this.auth.getUsername();
+    this.accountId = this.auth.getAccount();
+
   }
 
   ngOnInit(): void {
+    // Initialize contacts
     this.fetchContacts();
+
+    // Update contacts on trigger from TransferService
+    this.transfer.listen().subscribe(
+      () => { this.fetchContacts(); }
+    );
   }
 
   fetchContacts() {
-    this.transactions.getContacts(this.username).subscribe(contacts => {
-      this.contacts = contacts.filter(contact => contact.external);
-      if(this.contacts.length != 0) this.selectedAccount = this.contacts[0];
+    this.transfer.getContacts(this.username).subscribe(contacts => {
+      this.savedContacts = contacts.filter(contact => contact.external);
+      this.selectedContact = (this.savedContacts.length == 0) ? this.newContact : this.savedContacts[0];
     });
   }
 
-  onAccountChange(value: string) {
-    this.addExternal = value == 'add';
-  }
-
+  // Validate form on submit
   validate(form) {
-    console.log(form);
-    if (form.valid) {
-      //this.deposit(form);
-    }
     this.validated = true;
+    if(form.valid == true) {
+      if(this.selectedContact == this.newContact && this.newContact.label != "") this.createContact();
+      this.deposit();
+      this.resetAndClose();
+    }
   }
 
-  deposit(form) {
+  async createContact() {
+    await this.transfer.newContact(this.username, this.newContact);
   }
 
-  reset(form) {
-    form.resetForm();
+  async deposit() {
+    await this.transfer.deposit(this.selectedContact, `${this.accountId}`, "123456789", this.amount);
+  }
+
+  // Reset form fields, validation, and close modal
+  resetAndClose() {
+    this.newContact = new Contact(undefined, true, "", undefined);
+    this.selectedContact = this.savedContacts[0];
+    this.amount = undefined;
+    this.validated = false;
+    this.closeModal.nativeElement.click();
   }
 }

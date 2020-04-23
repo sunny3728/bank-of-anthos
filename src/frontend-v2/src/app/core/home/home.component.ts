@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Transaction } from '../../models/transaction.model';
 import { AccountService } from 'src/app/services/account.service';
+import { TransferService } from 'src/app/services/transfer.service';
 
 @Component({
   selector: 'app-home',
@@ -14,13 +15,22 @@ export class HomeComponent implements OnInit {
   balance: number = 0;
   transactions: Transaction[] = [];
 
-  constructor(private account: AccountService, private auth: AuthService) { 
+  constructor(private account: AccountService, private auth: AuthService, private transfer: TransferService) { 
     this.account_id = auth.getAccount();
   }
 
   ngOnInit(){
+    // Initialize balance and transaction history
     this.fetchAccountBalance();
     this.fetchTransactionHistory();
+
+    // Update balance and transaction history on trigger from TransferService
+    this.transfer.listen().subscribe(
+      () => { 
+        this.fetchAccountBalance();
+        this.fetchTransactionHistory();
+      }
+    );
   }
 
   fetchTransactionHistory() {
@@ -40,6 +50,6 @@ export class HomeComponent implements OnInit {
   }
 
   formatCurrency(amount: number) {
-    return amount == 0 || amount === undefined ? "$---" : amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+    return amount === undefined ? "$---" : amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
   }
 }

@@ -21,6 +21,7 @@
     "@angular/router": "~9.1.0",
     "@auth0/angular-jwt": "^4.0.0",
     "ngx-cookie-service": "^3.0.4",
+    "ngx-validators": "^5.2.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
