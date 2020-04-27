@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csql-proxy
+  labels:
+    app: csql-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csql-proxy
+  template:
+    metadata:
+      labels:
+        app: csql-proxy
+    spec:
+      containers:
+      - name: csql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.16
+        command: ["/cloud_sql_proxy",
+                  "-instances=$(PROJECT_ID):$(INSTANCE_REGION):$(INSTANCE_NAME)=tcp:0.0.0.0:5432",
+                  "-credential_file=/secrets/cloudsql/csql-sa.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        envFrom:
+          - configMapRef:
+              name: csql-config
+        volumeMounts:
+        - name: cloudsql-instance-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 300m
+            memory: 512Mi
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: csql-proxy-service
+spec:
+  selector:
+    app: csql-proxy
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
