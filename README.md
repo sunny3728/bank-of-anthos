@@ -200,7 +200,7 @@ kubectl create secret generic jwt-key --from-file=./jwtRS256.key --from-file=./j
 ### 9 - Deploy Kubernetes manifests
 
 ```
-kustomize build manifests/overlays/cloud-sql | kubectl apply -f -
+kubectl apply -k manifests/overlays/cloud-sql/
 ```
 
 After 1-2 minutes, you should see that all the pods are running:
