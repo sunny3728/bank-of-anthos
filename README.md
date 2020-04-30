@@ -169,14 +169,25 @@ gcloud beta sql connect ${INSTANCE_NAME} --user=ledger-admin --database=ledger-d
 # EXECUTE INIT SQL SCRIPT located at src/ledger-db/initdb/0_init_tables.sql
 ```
 
-### 6 - Create Service Account and Kubernetes Secret for Cloud SQL Proxy
+### 6 - Create Service Account and configure Workload Identity
 
 ```
 gcloud iam service-accounts create csql-svc --display-name "csql-svc"
+
 SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:csql-svc" --format='value(email)')
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member serviceAccount:$SA_EMAIL --role roles/cloudsql.client
-gcloud iam service-accounts keys create csql-sa.json --iam-account
-kubectl create secret generic cloudsql-instance-credentials --from-file=./csql-sa.json
+
+kubectl create serviceaccount workload-iden-csql
+
+gcloud iam service-accounts add-iam-policy-binding \
+  --role roles/iam.workloadIdentityUser \
+  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/workload-iden-csql]" \
+  csql-svc@${PROJECT_ID}.iam.gserviceaccount.com
+
+kubectl annotate serviceaccount \
+  workload-iden-csql \
+  iam.gke.io/gcp-service-account=csql-svc@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ### 7 - Populate necessary Env Vars for Cloud SQL Proxy
