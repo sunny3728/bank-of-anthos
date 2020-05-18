@@ -10,3 +10,6 @@ target/
 .DS_Store
 *.iml
 .idea/
+install-bundle-workload-identity
+csql.env
+*.bak

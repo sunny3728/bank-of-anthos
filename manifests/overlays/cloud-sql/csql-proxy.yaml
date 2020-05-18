@@ -34,15 +34,3 @@ spec:
           limits:
             cpu: 300m
             memory: 512Mi
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: csql-proxy-service
-spec:
-  selector:
-    app: csql-proxy
-  ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432

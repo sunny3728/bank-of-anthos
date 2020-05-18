@@ -10,3 +10,5 @@ resources:
 - app/userservice.yaml
 - app/config.yaml
 - extras/jwt/jwt-secret.yaml
+- app/accounts-db.yaml
+- app/ledger-db.yaml

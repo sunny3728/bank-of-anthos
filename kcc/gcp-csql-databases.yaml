@@ -1,0 +1,17 @@
+apiVersion: sql.cnrm.cloud.google.com/v1beta1
+kind: SQLDatabase
+metadata:
+  name: accounts-db
+spec:
+  charset: utf8
+  instanceRef:
+    name: boa-pgsql
+---
+apiVersion: sql.cnrm.cloud.google.com/v1beta1
+kind: SQLDatabase
+metadata:
+  name: ledger-db
+spec:
+  charset: utf8
+  instanceRef:
+    name: boa-pgsql

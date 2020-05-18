@@ -22,8 +22,21 @@ cluster: check-env
 		--project=${PROJECT_ID} --zone=${ZONE} \
 		--machine-type=n1-standard-2 --num-nodes=4 \
 		--enable-stackdriver-kubernetes --subnetwork=default \
+		--workload-pool=${PROJECT_ID}.svc.id.goog \
 		--labels csm=
-	skaffold run --default-repo=gcr.io/${PROJECT_ID} -l skaffold.dev/run-id=${CLUSTER}-${PROJECT_ID}-${ZONE}
+	gcloud iam service-accounts create cnrm-system
+	gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+		--member serviceAccount:cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com \
+		--role roles/owner
+	gcloud iam service-accounts add-iam-policy-binding cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com \
+		--member="serviceAccount:${PROJECT_ID}.svc.id.goog[cnrm-system/cnrm-controller-manager]" \
+		--role="roles/iam.workloadIdentityUser"
+	kubectl apply -f ./config-connector/install-bundle-workload-identity
+	kubectl annotate --overwrite serviceaccount cnrm-controller-manager -n cnrm-system \
+		iam.gke.io/gcp-service-account=cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com
+	kubectl annotate namespace \
+		default cnrm.cloud.google.com/project-id=${PROJECT_ID}
+	# skaffold run --default-repo=gcr.io/${PROJECT_ID} -l skaffold.dev/run-id=${CLUSTER}-${PROJECT_ID}-${ZONE}
 
 deploy: check-env
 	echo ${CLUSTER}

@@ -12,16 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: ConfigMap
+# scale down in cluster db to zero, reconfigure services to expose csql-proxy
+
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: accounts-db-config
-data:
-  ACCOUNTS_DB_URI: postgresql://accounts-admin:accounts-pwd@csql-proxy-service:5432/accounts-db
+  name: accounts-db
+spec:
+  replicas: 0
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  name: ledger-db-config
-data:
-  SPRING_DATASOURCE_URL: jdbc:postgresql://csql-proxy-service:5432/ledger-db
+  name: accounts-db
+spec:
+  selector:
+    app: csql-proxy
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ledger-db
+spec:
+  replicas: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ledger-db
+spec:
+  selector:
+    app: csql-proxy

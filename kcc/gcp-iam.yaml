@@ -1,0 +1,25 @@
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicyMember
+metadata:
+  name: csql-sa-policy
+spec:
+  member: serviceAccount:csql-svc@PROJECT_ID.iam.gserviceaccount.com
+  role: roles/cloudsql.client
+  resourceRef:
+    apiVersion: resourcemanager.cnrm.cloud.google.com/v1beta1
+    kind: Project
+    external: PROJECT_ID
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicy
+metadata:
+  name: csql-wp-sa-wi-policy
+spec:
+  resourceRef:
+    apiVersion: iam.cnrm.cloud.google.com/v1beta1
+    kind: IAMServiceAccount
+    name: csql-svc
+  bindings:
+    - role: roles/iam.workloadIdentityUser
+      members:
+        - serviceAccount:PROJECT_ID.svc.id.goog[default/workload-iden-csql]

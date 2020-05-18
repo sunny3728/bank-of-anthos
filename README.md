@@ -136,8 +136,10 @@ git clone https://github.com/GoogleCloudPlatform/bank-of-anthos.git
 
 ```
 PROJECT_ID=<your-project-id>
-INSTANCE_NAME=<your-cloud-sql-instance-name>
-INSTANCE_REGION=<your-cloud-sql-instance-region>
+INSTANCE_NAME=boa-pgsql
+INSTANCE_REGION=us-central1
+gcloud config set project $PROJECT_ID
+gcloud services enable container.googleapis.com sqladmin.googleapis.com sql-component.googleapis.com cloudresourcemanager.googleapis.com
 ```
 
 ### 3 - Create a Kubernetes cluster
@@ -145,50 +147,48 @@ INSTANCE_REGION=<your-cloud-sql-instance-region>
 ```
 gcloud beta container clusters create bank-of-anthos \
     --project=${PROJECT_ID} --zone=us-central1-b \
+    --workload-pool=${PROJECT_ID}.svc.id.goog \
     --machine-type=n1-standard-2 --num-nodes=4
+gcloud container clusters get-credentials --project ${PROJECT_ID} ${CLUSTER} --zone ${ZONE}
 ```
 
-### 4 - Create a Cloud SQL Instance
+### 4 - Install KCC
 
 ```
-gcloud services enable sqladmin.googleapis.com
-gcloud beta sql instances create ${INSTANCE_NAME} \
---database-version=POSTGRES_12 --cpu=2 --memory=7680MiB --region=${INSTANCE_REGION}
+gcloud iam service-accounts create cnrm-system
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+	--member serviceAccount:cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com \
+	--role roles/owner
+gcloud iam service-accounts add-iam-policy-binding cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com \
+	--member="serviceAccount:${PROJECT_ID}.svc.id.goog[cnrm-system/cnrm-controller-manager]" \
+	--role="roles/iam.workloadIdentityUser"
+kubectl apply -f ./install-bundle-workload-identity
+kubectl annotate --overwrite serviceaccount cnrm-controller-manager -n cnrm-system \
+	iam.gke.io/gcp-service-account=cnrm-system@${PROJECT_ID}.iam.gserviceaccount.com
+kubectl annotate namespace \
+default cnrm.cloud.google.com/project-id=${PROJECT_ID}
+```
+### 5 - Deploy CSQL using KCC
+
+After creating CSQL, optionally wait for instance to be up
+```
+sed -i.bak "s/PROJECT_ID/${PROJECT_ID}/g" ./kcc/gcp-iam.yaml
+kubectl apply -f ./kcc
+kubectl annotate --overwrite serviceaccount workload-iden-csql  \
+	iam.gke.io/gcp-service-account=csql-svc@${PROJECT_ID}.iam.gserviceaccount.com
+kubectl wait --for=condition=Ready sqldatabase/accounts-db --timeout=30m
+kubectl wait --for=condition=Ready sqldatabase/ledger-db --timeout=30m
 ```
 
-### 5 - Configure Cloud SQL
+### 6 - Seed Cloud SQL DBs
 
 ```
-gcloud sql users set-password root --instance=${INSTANCE_NAME} --password=root-pwd
-gcloud beta sql databases create accounts-db --instance=${INSTANCE_NAME}
-gcloud beta sql users create accounts-admin  --instance=${INSTANCE_NAME} --password=accounts-pwd
 gcloud beta sql connect ${INSTANCE_NAME} --user=accounts-admin --database=accounts-db
 # EXECUTE INIT SQL SCRIPT located at src/accounts-db/initdb/0-accounts-schema.sql
-gcloud beta sql users create ledger-admin  --instance=${INSTANCE_NAME} --password=ledger-pwd
 gcloud beta sql connect ${INSTANCE_NAME} --user=ledger-admin --database=ledger-db
 # EXECUTE INIT SQL SCRIPT located at src/ledger-db/initdb/0_init_tables.sql
 ```
 
-### 6 - Create Service Account and configure Workload Identity
-
-```
-gcloud iam service-accounts create csql-svc --display-name "csql-svc"
-
-SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:csql-svc" --format='value(email)')
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member serviceAccount:$SA_EMAIL --role roles/cloudsql.client
-
-kubectl create serviceaccount workload-iden-csql
-
-gcloud iam service-accounts add-iam-policy-binding \
-  --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/workload-iden-csql]" \
-  csql-svc@${PROJECT_ID}.iam.gserviceaccount.com
-
-kubectl annotate serviceaccount \
-  workload-iden-csql \
-  iam.gke.io/gcp-service-account=csql-svc@${PROJECT_ID}.iam.gserviceaccount.com
-```
 
 ### 7 - Populate necessary Env Vars for Cloud SQL Proxy
 
