@@ -21,10 +21,25 @@ import os
 
 from flask import Flask, abort, jsonify, make_response, redirect, \
     render_template, request, url_for
+from opentelemetry import trace
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.ext.flask import FlaskInstrumentor
+from opentelemetry.ext.requests import RequestsInstrumentor
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 import requests
 import jwt
 
+trace.set_tracer_provider(TracerProvider())
+cloud_trace_exporter = CloudTraceSpanExporter()
+trace.get_tracer_provider().add_span_processor(
+    SimpleExportSpanProcessor(cloud_trace_exporter)
+)
+
 APP = Flask(__name__)
+
+# FlaskInstrumentor().instrument_app(APP)
+# RequestsInstrumentor().instrument()
 
 @APP.route('/version', methods=['GET'])
 def version():
@@ -73,7 +88,9 @@ def home():
     try:
         url = '{}/{}'.format(APP.config["BALANCES_URI"], account_id)
         APP.logger.debug('Getting account balance.')
-        response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
+        tracer = trace.get_tracer(__name__)
+        with tracer.start_as_current_span("get-balance"):
+            response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
         if response:
             balance = response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
