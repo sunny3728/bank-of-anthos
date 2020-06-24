@@ -38,7 +38,7 @@ trace.get_tracer_provider().add_span_processor(
 
 APP = Flask(__name__)
 
-# FlaskInstrumentor().instrument_app(APP)
+FlaskInstrumentor().instrument_app(APP)
 # RequestsInstrumentor().instrument()
 
 @APP.route('/version', methods=['GET'])
