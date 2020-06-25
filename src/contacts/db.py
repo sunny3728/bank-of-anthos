@@ -18,6 +18,17 @@ db manages interactions with the underlying database
 
 import logging
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Boolean
+from opentelemetry import trace
+from opentelemetry.ext.sqlalchemy import SQLAlchemyInstrumentor
+from opentelemetry.sdk.trace import TracerProvider
+import sqlalchemy
+
+# trace.set_tracer_provider(TracerProvider())
+# engine = create_engine("sqlite:///:memory:")
+# SQLAlchemyInstrumentor().instrument(
+#     engine=engine,
+#     service="service-A",
+# )
 
 
 class ContactsDb:

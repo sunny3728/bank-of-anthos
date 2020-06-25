@@ -25,7 +25,7 @@ from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.ext.flask import FlaskInstrumentor
 from opentelemetry.ext.requests import RequestsInstrumentor
-from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace import TracerProvider, generate_trace_id
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 import requests
 import jwt
@@ -71,6 +71,7 @@ def home():
     """
     Renders home page. Redirects to /login if token is not valid
     """
+    tracer = trace.get_tracer_provider().get_tracer(__name__)
     token = request.cookies.get(APP.config['TOKEN_NAME'])
     if not verify_token(token):
         # user isn't authenticated
@@ -83,13 +84,13 @@ def home():
     account_id = token_data['acct']
 
     hed = {'Authorization': 'Bearer ' + token}
+    # hed['X-Cloud-Trace-Context'] = hex(generate_trace_id()) + '/0;o=1'
     # get balance
     balance = None
     try:
         url = '{}/{}'.format(APP.config["BALANCES_URI"], account_id)
         APP.logger.debug('Getting account balance.')
-        tracer = trace.get_tracer(__name__)
-        with tracer.start_as_current_span("get-balance"):
+        with tracer.start_as_current_span("get-balance-request"):
             response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
         if response:
             balance = response.json()
@@ -110,7 +111,8 @@ def home():
     try:
         url = '{}/{}'.format(APP.config["CONTACTS_URI"], username)
         APP.logger.debug('Getting contacts.')
-        response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
+        with tracer.start_as_current_span("get-contacts-request"):
+            response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
         if response:
             contacts = response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
@@ -330,11 +332,13 @@ def login():
 
 
 def _login_helper(username, password):
+    tracer = trace.get_tracer_provider().get_tracer(__name__)
     try:
         APP.logger.debug('Logging in.')
-        req = requests.get(url=APP.config["LOGIN_URI"],
-                           params={'username': username, 'password': password})
-        req.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
+        with tracer.start_as_current_span("login-request"):
+            req = requests.get(url=APP.config["LOGIN_URI"],
+                            params={'username': username, 'password': password})
+            req.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
 
         # login success
         token = req.json()['token'].encode('utf-8')

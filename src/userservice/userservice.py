@@ -28,13 +28,27 @@ import bcrypt
 import jwt
 from db import UserDb
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
+from opentelemetry import trace
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.ext.flask import FlaskInstrumentor
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 
 
 def create_app():
+
+    trace.set_tracer_provider(TracerProvider())
+    cloud_trace_exporter = CloudTraceSpanExporter()
+    trace.get_tracer_provider().add_span_processor(
+        SimpleExportSpanProcessor(cloud_trace_exporter)
+    )
+
     """Flask application factory to create instances
     of the Userservice Flask App
     """
     app = Flask(__name__)
+
+    FlaskInstrumentor().instrument_app(app)
 
     # Disabling unused-variable for lines with route decorated functions
     # as pylint thinks they are unused
