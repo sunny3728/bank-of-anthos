@@ -22,9 +22,11 @@ import os
 from flask import Flask, abort, jsonify, make_response, redirect, \
     render_template, request, url_for
 from opentelemetry import trace
+from opentelemetry.exporter.cloud_trace.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.ext.flask import FlaskInstrumentor
 from opentelemetry.ext.requests import RequestsInstrumentor
+from opentelemetry.propagators import set_global_httptextformat
 from opentelemetry.sdk.trace import TracerProvider, generate_trace_id
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 import requests
@@ -36,10 +38,12 @@ trace.get_tracer_provider().add_span_processor(
     SimpleExportSpanProcessor(cloud_trace_exporter)
 )
 
+# set_global_httptextformat(CloudTraceFormatPropagator())
+
 APP = Flask(__name__)
 
 FlaskInstrumentor().instrument_app(APP)
-# RequestsInstrumentor().instrument()
+RequestsInstrumentor().instrument()
 
 @APP.route('/version', methods=['GET'])
 def version():
@@ -71,7 +75,6 @@ def home():
     """
     Renders home page. Redirects to /login if token is not valid
     """
-    tracer = trace.get_tracer_provider().get_tracer(__name__)
     token = request.cookies.get(APP.config['TOKEN_NAME'])
     if not verify_token(token):
         # user isn't authenticated
@@ -84,14 +87,12 @@ def home():
     account_id = token_data['acct']
 
     hed = {'Authorization': 'Bearer ' + token}
-    # hed['X-Cloud-Trace-Context'] = hex(generate_trace_id()) + '/0;o=1'
     # get balance
     balance = None
     try:
         url = '{}/{}'.format(APP.config["BALANCES_URI"], account_id)
         APP.logger.debug('Getting account balance.')
-        with tracer.start_as_current_span("get-balance-request"):
-            response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
+        response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
         if response:
             balance = response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
@@ -111,8 +112,7 @@ def home():
     try:
         url = '{}/{}'.format(APP.config["CONTACTS_URI"], username)
         APP.logger.debug('Getting contacts.')
-        with tracer.start_as_current_span("get-contacts-request"):
-            response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
+        response = requests.get(url=url, headers=hed, timeout=APP.config['BACKEND_TIMEOUT'])
         if response:
             contacts = response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
@@ -332,13 +332,11 @@ def login():
 
 
 def _login_helper(username, password):
-    tracer = trace.get_tracer_provider().get_tracer(__name__)
     try:
         APP.logger.debug('Logging in.')
-        with tracer.start_as_current_span("login-request"):
-            req = requests.get(url=APP.config["LOGIN_URI"],
-                            params={'username': username, 'password': password})
-            req.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
+        req = requests.get(url=APP.config["LOGIN_URI"],
+                        params={'username': username, 'password': password})
+        req.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
 
         # login success
         token = req.json()['token'].encode('utf-8')

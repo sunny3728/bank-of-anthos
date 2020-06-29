@@ -22,13 +22,13 @@ idna==2.9                 # via requests
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.1            # via flask
 markupsafe==1.1.1         # via jinja2
-opentelemetry-api==0.9b0  # via opentelemetry-exporter-cloud-trace, opentelemetry-ext-flask, opentelemetry-ext-requests, opentelemetry-ext-wsgi, opentelemetry-instrumentation, opentelemetry-sdk
-opentelemetry-exporter-cloud-trace==0.9b0  # via -r requirements.in
-opentelemetry-ext-flask==0.9b0  # via -r requirements.in
-opentelemetry-ext-requests==0.9b0  # via -r requirements.in
-opentelemetry-ext-wsgi==0.9b0  # via opentelemetry-ext-flask
-opentelemetry-instrumentation==0.9b0  # via opentelemetry-ext-flask, opentelemetry-ext-requests, opentelemetry-ext-wsgi
-opentelemetry-sdk==0.9b0  # via -r requirements.in, opentelemetry-exporter-cloud-trace
+opentelemetry-api==0.10b0  # via opentelemetry-exporter-cloud-trace, opentelemetry-ext-flask, opentelemetry-ext-requests, opentelemetry-ext-wsgi, opentelemetry-instrumentation, opentelemetry-sdk
+opentelemetry-exporter-cloud-trace==0.10b0  # via -r requirements.in
+opentelemetry-ext-flask==0.10b0  # via -r requirements.in
+opentelemetry-ext-requests==0.10b0  # via -r requirements.in
+opentelemetry-ext-wsgi==0.10b0  # via opentelemetry-ext-flask
+opentelemetry-instrumentation==0.10b0  # via opentelemetry-ext-flask, opentelemetry-ext-requests, opentelemetry-ext-wsgi
+opentelemetry-sdk==0.10b0  # via -r requirements.in, opentelemetry-exporter-cloud-trace
 protobuf==3.12.2          # via google-api-core, googleapis-common-protos
 pyasn1-modules==0.2.8     # via google-auth
 pyasn1==0.4.8             # via pyasn1-modules, rsa
