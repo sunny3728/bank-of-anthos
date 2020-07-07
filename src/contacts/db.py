@@ -17,6 +17,7 @@ db manages interactions with the underlying database
 """
 
 import logging
+from opencensus.trace import config_integration
 from opentelemetry.ext.sqlalchemy import SQLAlchemyInstrumentor
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Boolean
 
@@ -28,7 +29,11 @@ class ContactsDb:
     """
 
     def __init__(self, uri, logger=logging):
+        # config_integration.trace_integrations(['logging'])
         self.engine = create_engine(uri)
+        # handler = logging.StreamHandler()
+        # handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
+        # logger.addHandler(handler)
         self.logger = logger
         self.contacts_table = Table(
             "contacts",

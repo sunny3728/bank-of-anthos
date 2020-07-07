@@ -9,3 +9,5 @@ opentelemetry-sdk==0.10b0
 opentelemetry-exporter-cloud-trace==0.10b0
 opentelemetry-ext-flask==0.10b0
 opentelemetry-ext-sqlalchemy==0.10b.0
+opencensus==0.7.10
+opencensus-ext-logging==0.1.0

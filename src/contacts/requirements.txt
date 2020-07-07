@@ -12,7 +12,7 @@ chardet==3.0.4            # via requests
 click==7.1.1              # via flask
 cryptography==2.9         # via -r requirements.in
 flask==1.1.2              # via -r requirements.in, opentelemetry-ext-flask
-google-api-core[grpc]==1.21.0  # via google-cloud-core, google-cloud-trace
+google-api-core[grpc]==1.21.0  # via google-cloud-core, google-cloud-trace, opencensus
 google-auth==1.18.0       # via google-api-core
 google-cloud-core==1.3.0  # via google-cloud-trace
 google-cloud-trace==0.23.0  # via opentelemetry-exporter-cloud-trace
@@ -23,6 +23,9 @@ idna==2.10                # via requests
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.1            # via flask
 markupsafe==1.1.1         # via jinja2
+opencensus-context==0.1.1  # via opencensus
+opencensus-ext-logging==0.1.0  # via -r requirements.in
+opencensus==0.7.10        # via -r requirements.in, opencensus-ext-logging
 opentelemetry-api==0.10b0  # via opentelemetry-exporter-cloud-trace, opentelemetry-ext-flask, opentelemetry-ext-sqlalchemy, opentelemetry-ext-wsgi, opentelemetry-instrumentation, opentelemetry-sdk
 opentelemetry-exporter-cloud-trace==0.10b0  # via -r requirements.in
 opentelemetry-ext-flask==0.10b0  # via -r requirements.in

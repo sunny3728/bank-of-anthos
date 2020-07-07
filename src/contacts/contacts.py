@@ -26,6 +26,9 @@ import sys
 import jwt
 from flask import Flask, jsonify, request
 import bleach
+from opencensus.trace import config_integration, logging_exporter
+from opencensus.trace.tracer import Tracer
+from opencensus.trace.print_exporter import PrintExporter
 from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.exporter.cloud_trace.cloud_trace_propagator import CloudTraceFormatPropagator
@@ -200,9 +203,18 @@ def create_app():
         """Executed when web app is terminated."""
         app.logger.info("Stopping contacts service.")
 
+    # This should allow log messages to use keys 'traceId' and 'spanId' but this code still produces: "KeyError: 'traceId'"
+    config_integration.trace_integrations(['logging'])
+
     # set up logger
     app.logger.handlers = logging.getLogger("gunicorn.error").handlers
     app.logger.setLevel(logging.getLogger("gunicorn.error").level)
+
+    # This is a workaround to try to re-set the formatter after gunicorn already has, during the flask server startup, so that the spanId and traceId can be included
+    app.logger.handlers[0].setFormatter(logging.Formatter('%(asctime)s | traceId=%(traceId)s spanId=%(spanId)s | [%(levelname)s] | %(funcName)s | %(message)s'))
+    
+    # exporter = logging_exporter.LoggingExporter(handler=app.logger.handlers[0])
+    tracer = Tracer(exporter=PrintExporter())
     app.logger.info("Starting contacts service.")
 
     # setup global variables
